@@ -1,0 +1,21 @@
+﻿h1 {
+    color: #007BFF;
+    font-size: 36px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.card {
+    width: 20rem;
+    transition: transform 0.2s;
+}
+
+    .card:hover {
+        transform: scale(1.05);
+        background-color: black;
+    }
+
+        .card:hover .list-group-item {
+            background-color: darkgray;
+        }

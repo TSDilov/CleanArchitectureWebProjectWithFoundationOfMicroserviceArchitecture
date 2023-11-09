@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="FluentAssertions" Version="6.12.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.12" />
+	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+	  <PackageReference Include="NUnit" Version="3.13.3" />
+	  <PackageReference Include="NUnit3TestAdapter" Version="4.3.0" />
+	  <PackageReference Include="NUnit.Analyzers" Version="3.5.0" />
+	  <PackageReference Include="coverlet.collector" Version="3.1.2" />
+	  <PackageReference Include="Respawn" Version="6.1.0" />
+	  <PackageReference Include="Respawn.Postgres" Version="1.0.15" />
+	  <PackageReference Include="Testcontainers" Version="3.5.0" />
+	  <PackageReference Include="Testcontainers.PostgreSql" Version="3.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TaskManager.Api\TaskManager.Api.csproj" />
+  </ItemGroup>
+
+</Project>

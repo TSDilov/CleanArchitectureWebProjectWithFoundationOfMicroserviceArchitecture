@@ -1,0 +1,54 @@
+﻿@model TaskListVM
+
+@{
+    ViewData["Title"] = "Task Board";
+}
+<h1>
+    <img src="/VL_signature.jpg" alt="Ventures Lab Logo" width="300" height="100">
+    Welcome to Ventures Lab users task board!
+</h1>
+@if (User.Identity.IsAuthenticated)
+{
+    @if (!Model.Tasks.Any())
+    {
+        <h3 class="text-center">No tasks yet!</h3>
+        <div class="container text-center">
+            <div class="row"><a asp-controller="Home" asp-action="Create" class="btn btn-primary mb-2">Create</a></div>
+        </div>
+    }
+    else
+    {
+        <div class="container text-center">
+            <div class="row"><a asp-controller="Home" asp-action="Create" class="btn btn-primary mb-2">Create</a></div>
+            <div class="row">
+                @foreach (var task in Model.Tasks)
+                {
+                    <div class="card" style="width: 20rem;">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><span class="fw-bold">Subject: </span> @task.Subject</li>
+                            <li class="list-group-item"><span class="fw-bold">Description: </span> : @task.Description</li>
+                            <li class="list-group-item"><span class="fw-bold">Date: </span> : @task.Date.ToShortDateString()</li>
+                            <li class="list-group-item"><span class="fw-bold">Start Time: </span> : @task.StartTime.ToString()</li>
+                            <li class="list-group-item"><span class="fw-bold">End Time: </span> : @task.EndTime.ToString()</li>
+                            @if (DateTime.Now > task.StartDateTimeLocal && TimeOnly.FromDateTime(DateTime.Now) > task.StartTime)
+                            {
+                                <li class="list-group-item"><span class="fw-bold">Your task is out of date!</span></li>
+                            }
+                            <li class="list-group-item">
+                                <span class="fw-bold">Actions: </span>
+                                <span></span>
+                                <a asp-controller="Home" asp-action="Edit" asp-route-id="@task.Id" class="btn btn-primary mb-2" style="display: inline-block; margin-right: 10px;">Edit</a>
+                                <span></span>
+                                <form asp-asp-controller="Home" asp-action="Delete" asp-route-id="@task.Id" method="post" style="display: inline-block;">
+                                    <button type="submit" class="btn btn-danger mb-2">Delete</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+        <partial name="_PagingPartial" model="@this.Model" />
+    }
+}
+
