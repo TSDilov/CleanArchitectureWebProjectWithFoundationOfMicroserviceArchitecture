@@ -6,6 +6,8 @@ namespace TaskManager.Infrastructure.Contracts
     {
         Task<string> Login(string email, string password);
 
+        Task<string> GetUserByEmailAsync(string email);
+
         Task<string> Register(RegisterDto registration);
     }
 }

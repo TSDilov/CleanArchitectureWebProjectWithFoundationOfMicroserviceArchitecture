@@ -56,6 +56,31 @@ namespace TaskManager.UI.Services
             }
         }
 
+        public async Task<bool> AuthenticateWithGoogle(string email)
+        {
+            try
+            {
+                var token = await userService.GetUserByEmailAsync(email);
+
+                if (token != null)
+                {
+                    var tokenContent = tokenHandler.ReadJwtToken(token);
+                    var claims = ParseClaims(tokenContent);
+                    var user = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+                    await httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user);
+                    localStorageService.SetStorageValue("token", token);
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> Register(RegisterVM registration)
         {
             try

@@ -42,5 +42,32 @@ namespace TaskManager.Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("GetUserByEmail")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            try
+            {
+                var user = await authService.GetUserByEmailAsync(email);
+
+                if (user != null)
+                {
+                    return Ok(user);
+                }
+
+                var registeredUser = await authService.RegisterUserFromGoogleAsync(email);
+
+                if (registeredUser != null)
+                {
+                    return Ok(registeredUser);
+                }
+
+                return NotFound($"User with email {email} not found");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

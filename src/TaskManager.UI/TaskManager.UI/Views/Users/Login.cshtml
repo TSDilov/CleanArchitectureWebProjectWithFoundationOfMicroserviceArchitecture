@@ -26,6 +26,13 @@
                 <input type="submit" value="Login" class="btn btn-primary" />
             </div>
         </form>
+        <hr />
+
+        <form asp-action="ExternalLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="form-inline">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="fab fa-google"></i> Login with Google
+            </button>
+        </form>
     </div>
 </div>
 

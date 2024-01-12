@@ -39,6 +39,27 @@ namespace TaskManager.Infrastructure.Services
             }
         }
 
+        public async Task<string> GetUserByEmailAsync(string email)
+        {
+            try
+            {
+                var httpClient = this.httpClientFactory.CreateClient(ApiPaths.TaskManagerApiName);
+                var loginResponse = await httpClient.GetAsync($"{ApiPaths.UserManager.GetUserByEmail}?email={email}");
+                if (loginResponse.IsSuccessStatusCode)
+                {
+                    var response = await loginResponse.Content.ReadFromJsonAsync<LoginResponseDto>();
+                    return response.Token;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex, "Error retrieving user by email");
+                throw;
+            }
+        }
+
         public async Task<string> Register(RegisterDto registration)
         {
             try

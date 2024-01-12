@@ -7,5 +7,9 @@ namespace TaskManager.Application.Contracts.Identity
         Task<AuthResponse> Login(AuthRequest request);
 
         Task<RegistrationResponse> Register(RegistrationRequest request);
+
+        Task<AuthResponse> RegisterUserFromGoogleAsync(string email);
+
+        Task<AuthResponse> GetUserByEmailAsync(string email);
     }
 }

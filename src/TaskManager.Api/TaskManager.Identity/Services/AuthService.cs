@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -87,6 +90,78 @@ namespace TaskManager.Identity.Services
             {
                 throw new Exception($"Email {request.Email} already exists.");
             }
+        }
+
+        public async Task<AuthResponse> GetUserByEmailAsync(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+            var response = new AuthResponse
+            {
+                Id = user.Id,
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                Email = user.Email,
+                UserName = user.UserName
+            };
+
+            return response;
+        }
+
+        public async Task<AuthResponse> RegisterUserFromGoogleAsync(string email)
+        {
+            try
+            {
+                var newUser = await CreateUserFromGoogleAsync(email);
+                JwtSecurityToken jwtSecurityToken = await GenerateToken(newUser);
+                if (newUser != null)
+                {
+                    return new AuthResponse 
+                    {
+                        Id = newUser.Id,
+                        Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                        Email = newUser.Email,
+                        UserName = newUser.UserName
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private async Task<ApplicationUser> CreateUserFromGoogleAsync(string email)
+        {
+
+            var existingUser = await userManager.FindByEmailAsync(email);
+
+            if (existingUser == null)
+            {
+                var newUser = new ApplicationUser
+                {
+                    Email = email,
+                    UserName = email,
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(newUser);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(newUser, RoleConstants.User);
+                    return newUser;
+                }
+            }
+
+            return null;
         }
 
         private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)

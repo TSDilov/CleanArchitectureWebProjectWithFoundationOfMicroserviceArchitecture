@@ -14,6 +14,8 @@ public static class ApiPaths
         public static string Login = "account/login";
 
         public static string Register = "account/register";
+
+        public static string GetUserByEmail = "account/getuserbyemail";
     }
 }
 
