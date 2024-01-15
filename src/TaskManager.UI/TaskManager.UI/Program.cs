@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.Configuration;
 using System.Reflection;
 using TaskManager.Infrastructure.Constants;
 using TaskManager.Infrastructure.Contracts;
+using TaskManager.Infrastructure.Models;
 using TaskManager.Infrastructure.Services;
 using TaskManager.UI.Models;
 using TaskManager.UI.Services;
@@ -13,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<GoogleAuthSettings>(builder.Configuration.GetSection("GoogleAuthSettings"));
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.CheckConsentNeeded = context => true;
@@ -37,6 +41,7 @@ builder.Services.AddScoped<ITaskManagerService, TaskManagerHttpService>();
 builder.Services.AddScoped<IUserService, UserHttpService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddHttpClient(ApiPaths.TaskManagerApiName, client =>
 {
